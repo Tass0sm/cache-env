@@ -1,0 +1,29 @@
+* Logic:
+
+Every shell process which calls the init code has a file for its env created in /tmp/
+`onion save` - save the environment to the file
+`onion wrap x` - save the set changes from the last environment to the file under name x
+`onion unwrap x` - undo the set of changes under the name x
+`onion show` -- show the colored environment
+
+
+operations: overwrite
+
+
+
+
+
+
+* Example
+
+pid-onion.env
+init:
+  VAR1=VAL1
+  VAR2=VAL2
+
+guix-current:
+  VAR2=VAL3:VAL2
+
+guix-profile:
+  VAR3=VAL4
+  VAR1=VAL5
