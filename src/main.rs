@@ -54,7 +54,6 @@ type Env = HashMap<String, String>;
 
 #[derive(Serialize, Deserialize, Debug)]
 struct EnvLayer {
-    name: String,
     is_active: bool,
     // diff: HashMap<String, EnvVarDiff>
 }
@@ -62,7 +61,7 @@ struct EnvLayer {
 #[derive(Serialize, Deserialize, Debug)]
 struct EnvOnion {
     base: Env,
-    layers: Vec<EnvLayer>
+    layers: HashMap<String, EnvLayer>
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -98,7 +97,7 @@ fn write_onion(onion: EnvOnion, env_file_path: &Path) {
 fn init(env_file_path: &Path) {
     let onion = EnvOnion {
         base: get_current_env(),
-        layers: vec![]
+        layers: HashMap::new()
     };
 
     write_onion(onion, env_file_path);
@@ -107,28 +106,23 @@ fn init(env_file_path: &Path) {
 fn save(env_file_path: &Path, name: &str) {
     let mut onion = read_onion(env_file_path);
     let new_layer = EnvLayer {
-        name: name.to_string(),
         is_active: true,
     };
 
-    onion.layers.push(new_layer);
-    write_onion(onion, env_file_path)
+    onion.layers.insert(name.to_string(), new_layer);
+    write_onion(onion, env_file_path);
 }
 
 fn deactivate(env_file_path: &Path, name: &str) {
     let mut onion = read_onion(env_file_path);
-    let index = onion.layers.iter().position(|l| l.name == name).unwrap();
-
-    onion.layers[index].is_active = false;
-    write_onion(onion, env_file_path)
+    onion.layers.entry(name.to_string()).and_modify(|layer| layer.is_active = false);
+    write_onion(onion, env_file_path);
 }
 
 fn reactivate(env_file_path: &Path, name: &str) {
     let mut onion = read_onion(env_file_path);
-    let index = onion.layers.iter().position(|l| l.name == name).unwrap();
-
-    onion.layers[index].is_active = true;
-    write_onion(onion, env_file_path)
+    onion.layers.entry(name.to_string()).and_modify(|layer| layer.is_active = true);
+    write_onion(onion, env_file_path);
 }
 
 fn export(env_file_path: &Path) {
