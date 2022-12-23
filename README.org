@@ -1,29 +1,20 @@
-* Logic:
+#+title: cache-env (Working Title)
 
-Every shell process which calls the init code has a file for its env created in /tmp/
-`onion save` - save the environment to the file
-`onion wrap x` - save the set changes from the last environment to the file under name x
-`onion unwrap x` - undo the set of changes under the name x
-`onion show` -- show the colored environment
+#+begin_src shell
+  cache-env save -f /tmp/tassos-shell.env base
+#+end_src
 
+Save the env to the file
 
-operations: overwrite
+#+begin_src shell
+  cache-env print -f /tmp/tassos-shell.env base
+#+end_src
 
+Prints the env in a way that the shell can evaluate
 
+* TODOs
+- [ ] Ignore some variables
+- [ ] Support other shells
+- [ ] Add init command for registering a shell function ([[https://github.com/conda/conda/blob/main/docs/source/dev-guide/deep-dives/activation.md][like conda]])
+- [ ] Revisit env diffs
 
-
-
-
-* Example
-
-pid-onion.env
-init:
-  VAR1=VAL1
-  VAR2=VAL2
-
-guix-current:
-  VAR2=VAL3:VAL2
-
-guix-profile:
-  VAR3=VAL4
-  VAR1=VAL5
