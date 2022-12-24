@@ -8,7 +8,7 @@ use serde_json;
 use serde::{Serialize, Deserialize};
 use clap::{arg, Command};
 
-fn cli() -> Command {
+fn cli() -> Command<'static> {
     Command::new("cache-env")
         .about("save and restore environments")
         .subcommand_required(true)
